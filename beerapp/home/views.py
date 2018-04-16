@@ -1,4 +1,4 @@
-from flask import session, redirect, url_for, render_template, request
+from flask import session, redirect, url_for, render_template, request, jsonify
 import requests
 from .api import api_endpoints as api
 from . import home
@@ -6,8 +6,17 @@ from . import home
 @home.route('/')
 def index():
     beers = api.beers()
+    # return jsonify(beers)
     return render_template("beers.html", username="testing", beers=beers)
     # return redirect(url_for('account.login'))
+
+@home.route('/ingredients')
+def ingredients():
+    return api.ingredients()
+
+@home.route('/stats')
+def stats():
+    return api.beers()
 
 # @home.route('/landing')
 # def landing():

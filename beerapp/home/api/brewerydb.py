@@ -1,8 +1,8 @@
 import requests
 
 DEFAULT_BASE_URI = "http://api.brewerydb.com/v2"
-BASE_URI = ""
-API_KEY = ""
+BASE_URI = "http://api.brewerydb.com/v2"
+API_KEY = "c6a44f4ad5bb5961c187c4b6e968953c"
 
 simple_endpoints = ["beers", "breweries", "categories", "events",
                     "featured", "features", "fluidsizes", "glassware",
