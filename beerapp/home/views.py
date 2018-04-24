@@ -1,29 +1,37 @@
 from flask import session, redirect, url_for, render_template, request, jsonify
+from operator import itemgetter
 import requests
 from .api import api_endpoints as api
 from . import home
 
-@home.route('/')
-def index():
-    beers = api.beers()
-    # return jsonify(beers)
-    return render_template("beers.html", username="testing", beers=beers)
-    # return redirect(url_for('account.login'))
+@home.route('/', methods=["GET", "POST"])
+def index(error=""):
+    if request.method == "GET":
+        beers = api.beers()
+        # return jsonify(beers)
+        return render_template("beers.html", beers=beers, error=error)
+    elif request.method == "POST":
+        beers = api.search(request.form.get('name'), "beer")
+        # return jsonify(beers)
+        if beers == []:
+            error = "No beers Match"
+        return render_template("beers.html", beers=beers, error=error)
 
-@home.route('/ingredients')
-def ingredients():
-    return api.ingredients()
-
-@home.route('/stats')
-def stats():
-    return api.beers()
-
-# @home.route('/landing')
-# def landing():
-#     """The landing page route, redirect users to their specific landing page.
-#     """
-#
-#     if 'trainer' in session and 'type' in session:
-#         return render_template("landing.html",account_type=session['type'], trainer=session['trainer'])
-#
-#     # return redirect(url_for('account.login'))
+@home.route('/breweries/<id>', methods=["GET", "POST"])
+@home.route('/breweries/', methods=["GET", "POST"])
+def breweries(name="", id="", error=""):
+    if request.method == "GET":
+        if id != "":
+            breweries = []
+            breweries.append(api.breweries(id))
+        else:
+            breweries = []
+            error = "Search For Breweries"
+        # return jsonify(breweries)
+        return render_template("breweries.html", breweries=breweries, error=error)
+    elif request.method == "POST":
+        breweries = api.search(request.form.get('name'), "brewery")
+        # return jsonify(breweries)
+        if breweries == []:
+            error = "No Breweries Match"
+        return render_template("breweries.html", breweries=breweries, error=error)
