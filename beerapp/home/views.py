@@ -16,7 +16,7 @@ def index(error="", id=""):
             beers.append(api.beer(id))
             ingredients = api.ingredients(id)
             if ingredients == "None":
-                error = "Search For Breweries"
+                error = "Search For Breers"
         return render_template("beers.html", beers=beers, ingredients=ingredients, error=error)
     elif request.method == "POST":
         beers = api.search(request.form.get('name'), "beer")
