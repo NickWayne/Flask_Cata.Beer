@@ -9,20 +9,17 @@ from . import home
 def index(error="", id=""):
     ingredients = ""
     if request.method == "GET":
-        if id != "":
-            if id[-1] == "-":
+        if id != "" and id[-1] == "-":
                 beers = api.breweryBeers(id)
-            else:
-                beers = []
-                beers.append(api.beer(id))
-                ingredients = api.ingredients(id)
-                if ingredients == "None":
-                    error = "Search For Breweries"
-        # return jsonify(beers)
+        else:
+            beers = []
+            beers.append(api.beer(id))
+            ingredients = api.ingredients(id)
+            if ingredients == "None":
+                error = "Search For Breweries"
         return render_template("beers.html", beers=beers, ingredients=ingredients, error=error)
     elif request.method == "POST":
         beers = api.search(request.form.get('name'), "beer")
-        # return jsonify(beers)
         if beers == []:
             error = "No beers Match"
         return render_template("beers.html", beers=beers, error=error)
