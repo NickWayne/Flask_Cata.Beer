@@ -4,12 +4,22 @@ import requests
 from .api import api_endpoints as api
 from . import home
 
+@home.route('/<id>', methods=["GET", "POST"])
 @home.route('/', methods=["GET", "POST"])
-def index(error=""):
+def index(error="", id=""):
+    ingredients = ""
     if request.method == "GET":
-        beers = api.beers()
+        if id != "":
+            if id[-1] == "-":
+                beers = api.breweryBeers(id)
+            else:
+                beers = []
+                beers.append(api.beer(id))
+                ingredients = api.ingredients(id)
+                if ingredients == "None":
+                    error = "Search For Breweries"
         # return jsonify(beers)
-        return render_template("beers.html", beers=beers, error=error)
+        return render_template("beers.html", beers=beers, ingredients=ingredients, error=error)
     elif request.method == "POST":
         beers = api.search(request.form.get('name'), "beer")
         # return jsonify(beers)

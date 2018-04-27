@@ -15,11 +15,35 @@ def search(query, type):
     except Exception:
         return []
 
-def breweries(name):
+def beer(id):
+    if id == "":
+        return beers()
+    else:
+        try:
+            return BreweryDb.beer(id, {'withBreweries': 'Y'})['data']
+        except Exception:
+            return []
+
+def ingredients(id):
+    if id == "":
+        return "None"
+    else:
+        try:
+            return BreweryDb.beer(id + "/ingredients")['data']
+        except Exception:
+            return [{"category": "", "name": ""}]
+
+def breweries(id):
     try:
-        return BreweryDb.brewery(name)['data']
+        return BreweryDb.brewery(id)['data']
     except Exception:
         return []
+
+def breweryBeers(id):
+    try:
+        return BreweryDb.brewery(id[:-1:] + "/beers")['data']
+    except Exception:
+        return id[:-1:] + "/beers"
 
 def getStyles():
     styles = BreweryDb.styles()['data']
@@ -29,8 +53,3 @@ def getStyles():
         groupids[style['category']['name']].append(style['id'])
         styleGroups.append(style['category']['name'])
     return [list(set(styleGroups)),groupids, styles]
-
-
-
-def ingredients():
-    return BreweryDb.beer('WHQisc')

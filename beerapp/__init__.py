@@ -7,6 +7,7 @@ from .home import home
 from database import mongo
 
 app = Flask(__name__)
+app.config['DEBUG'] = True
 app.config.from_object('config')
 app.session_interface = dangerous_session_interface.ItsdangerousSessionInterface()
 

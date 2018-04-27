@@ -20,30 +20,76 @@
                 <h1 class="center-align">{{ error }}</h1>
             </div>
         {% else %}
-            {% for beer in beers %}
-                <div class="col s12 m6 l4">
+            {% if ingredients %}
+                <div class="col s12 l6 offset-l3">
                     <div class="card blue-grey darken-3 sticky-action">
                         <div class="card-image">
-                            {% if beer['labels'] %}
-                                <img class="responsive-img" src="{{ beer.labels.large }}">
+                            {% if beers[0]['labels'] %}
+                                <img class="responsive-img" src="{{ beers[0].labels.large }}">
                             {% else %}
                                 <img class="responsive-img" src="{{ url_for('home.static', filename="beer.png") }}">
                             {% endif %}
                         </div>
-                        <div class="card-content white-text">
-                            <span class="card-title activator">{{ beer.name }}<i class="material-icons right">arrow_upward</i></span>
-                        </div>
-                        <div class="card-reveal" style="overflow-y: auto">
-                            <span class="card-title">{{ beer.name }}<i class="material-icons right">close</i></span>
-                            <p>{{ beer.description }}</p>
-                        </div>
+                            <div class="card-content white-text">
+                                <span class="card-title activator">{{ beers[0].name }}<i class="material-icons right">arrow_upward</i></span>
+                            </div>
+                            <div class="card-reveal" style="overflow-y: auto">
+                                <span class="card-title">{{ beers[0].name }}<i class="material-icons right">close</i></span>
+                                {% if beers[0].description %}
+                                    <p>{{ beers[0].description }}</p>
+                                {% else %}
+                                    <p>No Description Available</p>
+                                {% endif %}
+                                <ul class="collection">
+                                    {% if ingredients|length > 1 %}
+                                        <li class="collection-header center-align"><h4>Ingredients</h4></li><br>
+                                        {% for ingredient in ingredients %}
+                                            <li class="collection-item"><strong>{{ ingredient.category }}</strong> - {{ ingredient.name }}</li>
+                                        {% endfor %}
+                                    {% else %}
+                                        <li class="collection-header center-align"><h4>No Ingredients Listed</h4></li><br>
+                                    {% endif %}
+                                </ul>
+                            </div>
                         <div class="card-action">
-                            <a href="#">Ingredients</a>
-                            <a href="{{  url_for('home.breweries', id=beer.breweries[0].id) }}">Brewery</a>
+                            {% if beers[0].breweries %}
+                                <a href="{{  url_for('home.breweries', id=beers[0].breweries[0].id) }}">Brewery</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
-            {% endfor %}
+            {% else %}
+                {% for beer in beers %}
+                    <div class="col s12 m6 l4">
+                        <div class="card blue-grey darken-3 sticky-action">
+                            <div class="card-image">
+                                {% if beer['labels'] %}
+                                    <img class="responsive-img" src="{{ beer.labels.large }}">
+                                {% else %}
+                                    <img class="responsive-img" src="{{ url_for('home.static', filename="beer.png") }}">
+                                {% endif %}
+                            </div>
+                                <div class="card-content white-text">
+                                    <span class="card-title activator">{{ beer.name }}<i class="material-icons right">arrow_upward</i></span>
+                                </div>
+                                <div class="card-reveal" style="overflow-y: auto">
+                                    <span class="card-title">{{ beer.name }}<i class="material-icons right">close</i></span>
+                                    {% if beer.description %}
+                                        <p>{{ beer.description }}</p>
+                                    {% else %}
+                                        <p>No Description Available</p>
+                                    {% endif %}
+                                </div>
+                            <div class="card-action">
+                                <a href="{{  url_for('home.index', id=beer.id) }}">Ingredients</a>
+                                {% if beer.breweries %}
+                                    <a href="{{  url_for('home.breweries', id=beer.breweries[0].id) }}">Brewery</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
         {% endif %}
     </div>
 {% endblock %}
