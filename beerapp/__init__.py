@@ -4,8 +4,6 @@ from . import dangerous_session_interface
 
 from .home import home
 
-from database import mongo
-
 app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config.from_object('config')
@@ -14,8 +12,6 @@ app.session_interface = dangerous_session_interface.ItsdangerousSessionInterface
 import logging
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
-
-mongo.init_app(app)
 
 app.register_blueprint(home)
 
